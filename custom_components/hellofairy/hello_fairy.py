@@ -205,9 +205,10 @@ class Lamp:
 
     async def get_state(self) -> None:
         """Request the state of the lamp (send back state through notif)"""
-        # bits = struct.pack("BBB15x", COMMAND_STX, CMD_GETSTATE, CMD_GETSTATE_SEC)
-        # _LOGGER.debug("Send Cmd: Get_state")
-        # await self.send_cmd(bits)
+        bits = struct.pack("BBB15x", COMMAND_STX, CMD_GETSTATE, CMD_GETSTATE_SEC)
+        _LOGGER.debug("Send Cmd: Get_state")
+        result = await self.send_cmd(bits)
+        _LOGGER.debug(f"Get_state result: {result}")
 
     async def turn_on(self) -> None:
         """Turn the lamp on. (send back state through notif)"""
@@ -231,7 +232,9 @@ class Lamp:
         _LOGGER.debug(f"Set_brightness {brightness}")
         bits = bytes.fromhex("aa030701001403e8038cbb")
         _LOGGER.debug("Send Cmd: Brightness")
-        if await self.send_cmd(bits, wait_notif=0):
+        result = await self.send_cmd(bits, wait_notif=0)
+        _LOGGER.debug(f"Brightness result: {result}")
+        if result:
             self._brightness = brightness
 
     async def set_color(
